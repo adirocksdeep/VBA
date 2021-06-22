@@ -1,0 +1,54 @@
+Sub pasterrvalues()
+Dim StartTime As Double
+Dim SecondsElapsed As Double
+Dim x, y, p, q, lr As Long
+
+
+'Sheet1 is raw data where as sheet2 is template
+StartTime = Timer
+'Define value of y from the column no where filter should start
+y = 3
+'Define value of as of no. of markets to which filter to be applied count from the date headers from y to the end
+For x = 1 To 168
+
+    Sheets("Sheet1").Select
+    Rows("1:1").Select
+    Selection.AutoFilter
+    ActiveSheet.Range("$A$1:$fu$847").AutoFilter field:=y, Criteria1:="<>"
+    q = Sheets("Sheet2").Range("A1048575").End(xlUp).Row
+    Range("A2:B2").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Sheets("Sheet2").Select
+    Range("A50000").End(xlUp).Offset(1, 0).Select
+    ActiveSheet.Paste
+    Sheets("Sheet1").Select
+    lr = Worksheets("Sheet1").Cells(Rows.Count, y).End(xlUp).Row 'lr id providing the last row after filter is applied on coloun
+    Range(Cells(2, y), Cells(lr, y)).Select
+    Selection.Copy
+    Sheets("Sheet2").Select
+    Range("C" & q).Offset(1, 0).Select
+    ActiveSheet.Paste
+    r = Sheets("Sheet1").Range("A1048575").End(xlUp).Row
+    Sheets("Sheet1").Select
+    Range("Fo2", "Ft" & r).Select
+    Selection.Copy
+    Sheets("Sheet2").Select
+    Range("D" & q).Offset(1, 0).Select
+    ActiveSheet.Paste
+    y = y + 1
+    Next x
+
+SecondsElapsed = Round(Timer - StartTime, 2)
+MsgBox "This code ran successfully in " & SecondsElapsed & " seconds", vbInformation
+
+
+End Sub
+
+
+
+
+
+
+
+
